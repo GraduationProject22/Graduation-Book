@@ -1,0 +1,100 @@
+\chapter{V2V Server Implementation}
+Reaching a crucial element in the project, the link that the end devices which would be the Wi-Fi network and the server that organizes the messaging between individual cars. This chapter discusses the process of utilizing a Wi-Fi network to alert other cars starting from the very initial tests that leave the server's role in routing the information.
+
+\section{Server}
+This part of the network allows the addition of the users on the get go without the need to add them manually on this server as. The server broadcasts the incoming files to the remaining end devices on the network such that each vehicle can make an informed decision about its next move. This begs the question of how it broadcasts the message. First we need to know what a socket is, a socket is a kind of a software structure of a computer network that acts as an endpoint for sending and receiving data across the network. The server utilizes a socket object from the python socket library with the TCP protocol for more reliable messaging as the TCP protocol makes sure of sending or receiving data correctly unlike the UDP protocol which relies on the best effort only. After creating the socket object, the server can receive files from connected clients and send it to the remaining clients.
+
+Before discussing the inner workings of the, it will prove useful to explain a little bit about a design pattern called Observer design pattern. A design pattern is a solution to a common problem. There are several classifications for design patterns, one of them is called behavioral design pattern, they take care of effective communications between objects.
+
+Observer design pattern is a behavioral design pattern that lets you define a subscription mechanism to notify multiple objects about any events that happens to the object they are observing (the observable), in case of the server the observer would be the vehicles and the observable would be the server, when a vehicle sends a file to the observable it would notify the other vehicles. 
+\clearpage
+
+\begin{lstlisting}[language=Python]
+# Constants
+PORT = 5040
+SERVER = socket.gethostbyname(socket.gethostname())
+ADDRESS = ('192.168.1.5', PORT)
+FORMAT = 'utf-8'
+ 
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.bind(ADDRESS)
+ 
+def start():
+   serverObservable = Observable()
+   server.listen()
+   print(f"[LISTENING] Server is listening on {SERVER}:{PORT}")
+   while True:
+       conn, addr = server.accept()
+       thread = threading.Thread(
+           target=handle_client, args=(conn, addr, serverObservable))
+       thread.start()
+ 
+ 
+print("[STARTING] server is starting...")
+start()
+\end{lstlisting}
+At first comes some constants definitions required to make a socket, then a function called \textbf{start}  is defined as the name indicates responsible for starting the server, in this function the server observable is created, then by executing \textbf{listen} method on the socket object, the server is ready to accept incoming connections from the vehicles, when a vehicle tries to connect to the server, a new thread is created to handle that vehicle and a function called \textbf{handle\_client} is executed.
+
+\clearpage
+\begin{lstlisting}[language=Python]
+def handle_client(conn, addr, serverObservable):
+   print(f"[NEW CONNECTION] {addr} connected.")
+   connection_buffer = Buffer(conn)
+   serverObservable.subscribe([conn, addr[0]])
+   while True:
+       file_name = connection_buffer.get_utf8()
+       if not file_name:
+           break
+       full_file_name = os.path.join('files', file_name)
+       file_size = int(connection_buffer.get_utf8())
+ 
+       with open(full_file_name, 'wb') as f:
+           remaining = file_size
+           while remaining:
+               chunk_size = BUFFER_SIZE if remaining >= BUFFER_SIZE 
+               else remaining
+               print(chunk_size)
+               chunk = connection_buffer.get_bytes(chunk_size)
+               if not chunk:
+                   break
+               f.write(chunk)
+               remaining -= len(chunk)
+           if remaining:
+               print('File incomplete.  Missing', remaining, 'bytes.')
+           else:
+               print('File received successfully.')
+       file_ip = json.loads(read_file(full_file_name))["ip"]
+ 
+       serverObservable.notify(file_name, file_ip)
+   serverObservable.unsubscribe(conn)
+   print('Connection closed.')
+   conn.close()
+\end{lstlisting}
+
+This function does three things, first it adds that vehicle to the subscribers list, second it keeps receiving files incoming from that client and third it notifies other vehicles, notify here means sending received files to them. 
+
+\section{client}
+The objective here is to get the data from the other sensors and order it in a readable file for other members of the network to receive it, analyze it and make the decision accordingly.
+
+\subsection{Socket Programming Trial}
+First to get a feel of how to use socket programming in python, an echo server was established on a single laptop to understand the working principles. Two files were in the works, the client and the server. The intended mission here is to have the server file listen on the agreed upon port number for a certain message from the client, for example a string “This is the client!”. Once the message is received by the server it is sent back to the client through the same port to be printed on the screen hence the name echo server.
+
+\subsection{Simplex}
+Like any communication system starting with the case of the simplex, the client can send a file for a one way street communication case that was tested out and succeeded in sending only one file however when we tried to send multiple files a problem occurred, a bad discriminator error. This problem rose because multiple files were attempted to be sent sequentially. This error is fixed when choosing a buffer solution search that all the files can be put in one buffer then sent all at once.
+
+\subsection{Half Duplex}
+Modifications on the simplex code were made such that either the server or the client can send a file at a time.
+
+\subsection{Full Duplex}
+The following sections describe how the full duplex came to be.
+
+\subsubsection{Multiple client handling}
+With the help of threading each client can be on a different thread such that the server can communicate with multiple users at one time. However threading isn't the only factor to complete this kind of a task, there was a need for an algorithm to administer the process called the Observer Design Pattern. Observer pattern is used when there is one-to-many relationship between objects such as if one object is modified, its dependent objects are to be notified automatically. Observer pattern falls under the behavioral pattern category. In our case the observer is the server and the observable are the clients connected.
+\newline\newline
+\textbf{Upcoming two sections rely on the library of multiprocesses to make this work}
+
+\subsubsection{UART handling}
+As part of the client, the raw data coming from the microcontroller is read serially and organized in a JSON file named after the IP address of the vehicle and sends it over the network to the server. The received files are fed serially into the microcontroller to make an informed decision.
+
+\subsubsection{Server handling}
+This part receives the incoming files from the server and puts them in the folder where the UART handler can feed them to the micro-controller.

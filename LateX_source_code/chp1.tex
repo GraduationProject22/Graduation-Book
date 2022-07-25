@@ -1,0 +1,77 @@
+\chapter{Introduction}
+Humanity always thrived for continuous improvement in every aspect of life. Starting a journey from the mechanical engineering perspective where the whole process evolved from the more primitive manhandled assembly lines going into the industrial revolution and finally the modern factory which relies mostly on robotics. Another journey that started much later is the digital evolution of the world which started from the fabrication of the first transistor to the now commercially available devices containing more computing power than was needed to send the first astronauts to space over half a century ago.\newline
+Vehicle to Everything (V2X) is one of the many branches that started from these two journeys crossing paths in the 21st century. V2X is where any vehicle within the system in question can communicate with other entities or end devices whether that be another vehicle or the underlying infrastructure surrounding it. The communication between the parties involved in the system may or may not influence the behavior of the individual end devices.\newline
+Since V2X is an umbrella name for each individual case where the vehicle communicates with a certain involved party it’s important to know some examples of the individual cases:
+\begin{itemize}
+    \item Vehicle to Vehicle (V2V)
+    \item Vehicle to Pedestrian (V2P)
+    \item Vehicle to Infrastructure (V2I)
+    \item Vehicle to Network (V2N)
+\end{itemize}
+It is only fitting to put V2V as the first example as this was the starting step towards the different variations that make V2X.\newline
+V2X is one more step towards the continuous effort to eliminate the mistakes caused by humans and in the most unfortunate cases accidents that cause severe injuries and in extreme cases loss of life. This is achieved through the transmission of vital information of each end device and broadcasting it accordingly so precautions or time sensitive decisions can be made to spare society from the damage that could’ve been caused by such possible incidents on a humanitarian level and on a pragmatic or functional level it would improve the traffic circulation.
+\section {Background}
+According to the World Health Organization (WHO), approximately 1.2 million people die and 50 million are injured annually due to road accidents. \newline \newline
+In 2020, the National Highway Traffic Safety Administration (NHTSA) (USA) early estimates show that an estimated 38,680 people died in motor vehicle traffic crashes. This is the largest projected number of fatalities since 2007 and represents an increase of about 7.2 percent as compared to the 36,096 fatalities reported in 2019. \newline \newline
+\section{Problem statement}
+The project seeks to solve some issues, the problem statement is an important tool to clarify the vision of the project. This section talks about the problems in point of view of the project and how it can solve them.
+\subsection{Problems}
+\begin{itemize}
+    \item Road accidents are increasing day after day due to over speeding, drunken driving, distractions to driver, red light jumping, avoiding safety gears like seat belts and helmets, and non-adherence to lane driving and overtaking in a wrong manner. This calls for the development of advanced driver-assistance systems that operate by gathering data about road conditions, as well as vehicle subsystems condition and performance and the driver condition. To make better use of this information, it needs to be communicated to nearby vehicles in the road and traffic control units. This is where V2X communication technologies come into play. Vehicle-to-everything is a promising technology based on the fusion of several hot research areas, such as Artificial Intelligence (AI), Machine Learning (ML) and Control Theory, Big Data, and the Internet of Things (IoT).
+    \item Urgent service providers; such as ambulance and fire trucks, have a hard time trying to reach their destination.
+\end{itemize}
+
+In case of accidents, ambulance drivers fight with time to get to the injured people before their condition deteriorates, or even worse, die. Having suitable and specific road for emergency will help us save many lives, but it’s not always easy to have such roads, so we want to make use of V2X communication to try and facilitate the transportation of ambulance.
+\subsection{Solution}
+The idea is to make a communication system between vehicles which allows vehicles to communicate and issue warnings when there is a sudden action occurs. Not only vehicles communicate with each other, but also the vehicle can detect everything that may cause any change in its path or its status. \newline
+For example, if there is a wall at the end of road, the system has to detect it and give a warning to the driver so that they can apply the brakes in time. At the same time, the other vehicles behind the first vehicle receive a warning from their systems that the first vehicle will stop.
+
+\section{Literature Survey}
+In any V2V project a crucial part of the system is the method of communication between the end devices that take part in the system and the parameters and features of the chosen method. Speed, reliability and security are critical parameters to be considered when designing the system. The common methods in the industry will be discussed in the upcoming sections and the methods chosen for this specific implementation.
+
+\subsection{State of the art}
+Considering the important element of mobility and the large number of end devices in such systems we have a wireless solution and a channel that is not already populated with a significant number of users. Companies working in such projects explored and continue to experiment with a variety of solutions including:
+\begin{itemize}
+    \item Massive MIMO
+    \item Software Defined Networks
+    \item Millimeter Wave Communication
+    \item Mobile Edge Computing LTE
+    \item Visible Light Communication Networks
+\end{itemize}
+However, the most abundant solutions can be found to be either Dedicated Short-Range Communications (DSRC) is based on the 802.11p IEEE protocol or the cellular V2X (C-V2X). Both of these approaches were launched by The 3rd Generation Partnership Project (3GPP). Either one of these two solutions provide mobility and a previously unused band in commercial solutions which is the 5.9GHz band.\newline
+\hspace{10mm} The purpose of the communication is to transfer or broadcast information about each vehicle. This type of data has to come from somewhere that place being the sensors within the vehicle itself, these sensors require a microcontroller to handle that type of raw information. \newline
+The most commonly used microcontrollers for this type of application include:
+\begin{itemize}
+    \item AVR
+    \item Tiva C
+    \item STM32 
+\end{itemize}
+\hspace{10mm} The previously mentioned type of technologies either for communication or embedded systems are used by companies leading the research for the development of V2X such as Hyundai, Ford and Toyota.\newline
+Since the strength of such a large scale system is best demonstrated when the environment is working harmoniously with itself and its elements, such research is conducted within controlled environments or smart cities which allows the necessary observation for different scenarios and the system’s response to them. \clearpage
+In the upcoming chapters, project implementation will be discussed in detail including:
+\begin{itemize}
+    \item Extraction of vehicle data from modules and sensors.
+    \item Communication between vehicles using Wi-Fi by server.
+    \item Communication between sensors, modules and processor.
+    \item How to analyze the data for the decision making of the vehicle.
+\end{itemize}
+
+\section{Summary}
+
+In chapter 2 an overview of the project will be discussed and how it is structured and the building blocks of each unit.
+
+Chapter 3 will go over the chosen communication protocols and why they were chosen to connect the different parts of the project whether these protocols wired or wireless. 
+
+In chapter 4 the peripherals of the STM32 will be discussed in detail and how each one is initialized and used in order to get the project up and working.
+
+Chapter 5 will go over the used components and sensors that define the vehicle's behavior, and how that unit connects with the outer world.
+
+Chapter 6 will explain the analysis steps in great detail and how the information is used to reach an informed decision.
+
+In chapter 7 the inner workings of the server are described and the purpose of each function within the program.
+
+Chapter 8 will describe the agreed upon format in which each vehicle will communicate with the rest of the network, and will also describe the prototype by which the main functionality of the project is highlighted.
+
+Chapter 9 will give a glimpse about the future of the project and the possible applications that it will take part of.
+
+
